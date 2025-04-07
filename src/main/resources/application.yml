@@ -1,0 +1,55 @@
+# 公共配置文件
+# @author <a href="https://github.com/linhai0872">林海
+spring:
+  profiles:
+    active: dev
+  application:
+    name: youlin-backend
+  # DataSource Config
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/usermatching_update
+    username: root
+    password: hyx618mysql
+  # session 失效时间（分钟）
+  session:
+    timeout: 86400
+    store-type: redis
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  # redis 配置
+  redis:
+    port: 6379
+    host: localhost
+    database: 0
+  # rabbitmq 配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: hyx618mq
+server:
+  port: 8084
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        domain: localhost # cookie作用域 前后端不同端口 提取前后端的公共地址
+# AI-SDK相关配置
+ai:
+  apiKey: 53e3b9a9-0ff4-43b4-baa3-f798d32baa6c #填写你自己的API Key
+  default-model-id: "ep-20250312200345-xp8h9"
+  default-welcome-message: "你好，这里是有林AI助手，请问有什么可以帮助您的？"
+  conversation-cache-key-prefix: "ai:conversation:"
+  message-cache-key-prefix: "ai:message:"
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl //mybatis日志输出
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linhai.youlin.mapper.TeamChatMessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.linhai.youlin.model.domain.TeamChatMessage">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="teamId" column="teamId" jdbcType="BIGINT"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 包含用户信息的 ResultMap -->
+    <resultMap id="MessageWithUserInfoResultMap" type="com.linhai.youlin.model.domain.TeamChatMessage" extends="BaseResultMap">
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="avatarUrl" column="avatarUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,teamId,userId,
+        content,createTime
+    </sql>
+
+    <!-- 获取队伍消息并关联发送者信息 -->
+    <select id="listMessagesWithUserInfo" resultMap="MessageWithUserInfoResultMap">
+        SELECT
+            tcm.id, tcm.teamId, tcm.userId, tcm.content, tcm.createTime,
+            u.username, u.avatarUrl
+        FROM
+            team_chat_message tcm
+                JOIN
+            user u ON tcm.userId = u.id
+        WHERE
+            tcm.teamId = #{teamId}
+        -- AND tcm.isDelete = 0 -- 如果有软删除
+        ORDER BY
+            tcm.createTime DESC -- 按时间倒序获取最新的
+        LIMIT #{limit}
+    </select>
+</mapper>
